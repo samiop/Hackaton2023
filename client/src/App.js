@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  Redirect,
+} from "react-router-dom";
+import Dashboard from "./Dashboard";
+import User from "./User";
 
-function App() {
+// import "./bezkoder.css";
+//import "./bezkoder.css";
+
+
+
+  // dispatch(allProjects());
+  function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+ <BrowserRouter>
+      <Routes>
 
+      <Route path="/" element={<Dashboard />}>
+          <Route index element={<Dashboard />} />
+          <Route path={"/user"} element={<User />} />
+          {/* <Route path="contact" element={<Contact />} />
+          <Route path="*" element={<NoPage />} /> */}
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
+  );
+}; //          <Route path={"/addchapter"} element={<Addchapter />} />
 export default App;
