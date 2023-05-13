@@ -2,14 +2,55 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { authentification } from './firebase-config';
+import { TwitterAuthProvider, signInWithPopup } from 'firebase/auth';
+import axios from "axios";
 
+import { useNavigate } from "react-router-dom";
 
-
-
-
+const config ={
+    headers:{
+      'content-type': 'multipart/form-data'
+  
+  }
+  }
+const AddUserToDataBase = (username) => {
+    let navigate = useNavigate();
+    axios
+      .post(`http://localhost:5000/twitter/${username}`)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+        navigate("/admin");
+      });
+  };
 
 function User() {
+
+
+
+const signInWithTwitter =() =>{
+const provider = new TwitterAuthProvider();
+signInWithPopup(authentification,provider)
+.then((re)=>{
+    console.log(re._tokenResponse);
+    console.log(re._tokenResponse.screenName);
+    AddUserToDataBase(re._tokenResponse.screenName)
+
+
+}).catch((err)=>{
+    console.log(err);
+})
+
+}
+
   return (
+
+
+
+
+
+
     <div className="App">
      
 
@@ -52,6 +93,9 @@ function User() {
 
 {/* <FontAwesomeIcon icon="fa-brands fa-square-twitter" /> */}
 <i className="fas fa-wallet" ></i>
+
+
+<button onClick={signInWithTwitter}> </button>
 
 </div>
 

@@ -22,8 +22,8 @@ import User from "./User";
  <BrowserRouter>
       <Routes>
 
-      <Route path="/" element={<Dashboard />}>
-          <Route index element={<Dashboard />} />
+      <Route path="/" element={<User />}>
+          <Route index element={<User />} />
           <Route path={"/user"} element={<User />} />
           {/* <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} /> */}
