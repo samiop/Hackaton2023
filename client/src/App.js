@@ -1,36 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import ReactDOM from "react-dom/client";
 import {
   BrowserRouter,
   Routes,
-  Route,
-  Link,
-  useNavigate,
-  Redirect,
+  Route
 } from "react-router-dom";
 import Dashboard from "./Dashboard";
+import scriptRunner from "./scriptRunner";
 import User from "./User";
 
-// import "./bezkoder.css";
-//import "./bezkoder.css";
-
-
-
-  // dispatch(allProjects());
-  function App() {
+export default function App() {
   return (
- <BrowserRouter>
+    <BrowserRouter>
       <Routes>
-
-      <Route path="/" element={<User />}>
-          <Route index element={<User />} />
-          <Route path={"/user"} element={<User />} />
-          {/* <Route path="contact" element={<Contact />} />
-          <Route path="*" element={<NoPage />} /> */}
-        </Route>
-
+        <Route path="/" element={<User />} />
+        {/* <Route path="/admin" element={<Dashboard />} /> */}
+        <Route path="/scriptRunner" element={<scriptRunner />} />
       </Routes>
     </BrowserRouter>
   );
-}; //          <Route path={"/addchapter"} element={<Addchapter />} />
-export default App;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

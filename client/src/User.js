@@ -1,12 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+
+import { FaWallet, FaTwitter } from 'react-icons/fa';
+import connectWallet from './walletconection';
+import { AiFillCheckCircle } from 'react-icons/ai';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { authentification } from './firebase-config';
 import { TwitterAuthProvider, signInWithPopup } from 'firebase/auth';
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+
 
 const config ={
     headers:{
@@ -15,19 +22,53 @@ const config ={
   }
   }
 const AddUserToDataBase = (username) => {
-    let navigate = useNavigate();
+    console.log(username);
+    
     axios
-      .post(`http://localhost:5000/twitter/${username}`)
+      .post(`http://localhost:5000/api/twitter/${username}`)
       .then((res) => {
         console.log(res);
         console.log(res.data);
-        navigate("/admin");
+  
+      }).catch((err)=>{
+        console.log(err);
       });
   };
 
-function User() {
+const AddWallet = (wallet) => {
+    console.log(wallet);
+    
+    axios
+      .post(`http://localhost:5000/api/wallet/${wallet}`)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+  
+      }).catch((err)=>{
+        console.log(err);
+      });
+  };
 
 
+
+  async function wallet_check(){
+    const Tezos = new TezosToolkit("https://mainnet-tezos.giganode.io");
+    const wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
+  
+    Tezos.setWalletProvider(wallet);
+  
+    // The following code should always be run during pageload if you want to show if the user is connected.
+    const activeAccount = await wallet.client.getActiveAccount();
+    if (activeAccount) {
+      AddWallet(wallet)
+      // User already has account connected, everything is ready
+      // You can now do an operation request, sign request, or send another permission request to switch wallet
+      return activeAccount;
+    } else {
+      // The user is not connected. A button should be displayed where the user can connect to his wallet.
+      console.log("Not connected!");
+    }
+  }
 
 const signInWithTwitter =() =>{
 const provider = new TwitterAuthProvider();
@@ -44,64 +85,75 @@ signInWithPopup(authentification,provider)
 
 }
 
-  return (
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+function User() {
+  return ( 
 
     <div className="App">
-     
+      <div className="border col-5 container shadow" style={{'borderRadius':'5px 5px 0 0'}}>
+        <h2><b>9</b> days left</h2>
+      </div>
 
-     <div className="square-row__row">
-        <div className="color-square red-square span6" ng-class="{span4: !campaign.hide_total_entries, span6: campaign.hide_total_entries}">
-          <span className="square-describe" id="current-entries">
-            <span className="status ng-binding" ng-class="getContestantEntriesStatusClass()">
-              0
-            </span>
-            <span className="description ng-binding">Your Entries</span>
-          </span>
+      <img ng-if="!show_image_above_name() && has_single_image()" className="crisp incentive-banner ng-scope top col-5" ng-src="https://user-assets.out.sh/user-assets/579570/FEjhzxuZTPg0wo4G/where-to.gif" ng-style="{height: imageHeight()}" alt="NFT Giveaway" ng-class="{top: incentive.description}" applyonload src="https://user-assets.out.sh/user-assets/579570/FEjhzxuZTPg0wo4G/where-to.gif"  />
+      
+      <div className="border col-5 container shadow pt-2" style={{'borderRadius':'0 0 5px 5px'}}>
+        <p> Promote your NFTs by giving some free ones away to users who 
+        complete meaningful actions that will build awareness and spread the word about your NFTs.</p>
+        {wallet_check() ? (
+          <div style={{'display': 'flex'}} onClick={connectWallet}>
+            <div className="icon col-2" style={{'background-color':'green'}}>
+              <h4><AiFillCheckCircle /></h4>
+            </div>
+            <div className="field">
+              <h4>Your wallet is connected</h4>
+            </div>
+          </div>
+        ):(
+          <div style={{'display': 'flex'}} onClick={connectWallet}>
+            <div className="icon col-2">
+              <h4><FaWallet /></h4>
+            </div>
+            <div className="field">
+              <h4>Connected your Tezos Wallet</h4>
+            </div>
+          </div>
+        )}
+        <div style={{'display': 'flex'}} onClick={signInWithTwitter}>
+          <div className="icon col-2" style={{'background-color': '#00BFFF'}}>
+            <h4><FaTwitter /></h4>
+          </div>
+          <div className="field">
+            <h4>Sign in with Twitter account</h4>
+          </div>
         </div>
-        {/* ngIf: !campaign.hide_total_entries */}
-        <div className="color-square purple-square span6" ng-class="{span4: !campaign.hide_total_entries, span6: campaign.hide_total_entries}">
-          <div className="square-divider" />
-          <span className="square-describe ng-scope" data-ends={1684677612} data-starts={1642942800} gl-countdown ng-class="{'one-line': isEnded()}">
-            <span className="status ng-binding">
-              9
-            </span>
-            <span className="description ng-binding" ng-show="isStarted() || isTestMode()">
-              Days
-              {/* ngIf: !isEnded() && isStarted() */}<span ng-if="!isEnded() && isStarted()" className="ng-binding ng-scope">
-                Left
-              </span>{/* end ngIf: !isEnded() && isStarted() */}
-              {/* ngIf: !isEnded() && !isStarted() */}
-            </span>
-            {/* ngIf: !isStarted() && !isTestMode() */}
-          </span>
+        <div className='footer'>
+          <p>Terms & Conditions | © NFT Creator</p>
         </div>
       </div>
 
-     <img ng-if="!show_image_above_name() && has_single_image()" className="crisp incentive-banner ng-scope top" ng-src="https://user-assets.out.sh/user-assets/579570/FEjhzxuZTPg0wo4G/where-to.gif" ng-style="{height: imageHeight()}" alt="NFT Giveaway" ng-class="{top: incentive.description}" applyonload src="https://user-assets.out.sh/user-assets/579570/FEjhzxuZTPg0wo4G/where-to.gif" style={{height: '283px'}} />
-<br></br>
-<br></br>
-<br></br>
-<br></br>
-<br></br>
-<br></br>
-<div>
-
-{/* <FontAwesomeIcon icon="fa-brands fa-square-twitter" /> */}
-<i className="fas fa-wallet" ></i>
 
 
-<button onClick={signInWithTwitter}> </button>
+
 
 </div>
 
 
-     
-    </div>
+
+ 
   );
 }
 
