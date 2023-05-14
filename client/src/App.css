@@ -55,6 +55,9 @@ table {
   width: 100%;
   text-align: center;
 }
+thead{
+  background-color: lightblue;
+}
 th, td {
   border: 1px solid black !important;
 }
