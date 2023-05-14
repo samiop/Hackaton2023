@@ -14,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<User />} />
-        {/* <Route path="/admin" element={<Dashboard />} /> */}
+        <Route path="/admin" element={<Dashboard />} />
         <Route path="/scriptRunner" element={<scriptRunner />} />
       </Routes>
     </BrowserRouter>
