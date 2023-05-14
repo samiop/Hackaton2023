@@ -3,19 +3,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {MdDelete} from 'react-icons/md';
 import { useState } from 'react';
 
-import axios from "axios";
-
-
-
-
-
-
-
-
-
-
-
-
 const data = [
   {
     select: false,
@@ -38,7 +25,11 @@ function Dashboard() {
   const [tableData, setTableData] = useState(data);
   const [selectedStatus, setSelectedStatus] = useState("all");
 
-
+  const handleSelectChange = (event, index) => {
+    const newData = [...tableData];
+    newData[index].select = event.target.checked;
+    setTableData(newData);
+  };
 
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
@@ -47,12 +38,6 @@ function Dashboard() {
   const filteredData = selectedStatus === "all"
     ? tableData
     : tableData.filter(item => item.status === selectedStatus);
-
-  const handleSelectChange = (event, index) => {
-    const newData = [...tableData];
-    newData[index].select = event.target.checked;
-    setTableData(newData);
-  };
 
   return ( 
     <div className="App">
@@ -83,7 +68,7 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item, index) => (
+            {filteredData.map((item, index) => (
               <tr key={item.id}>
                 <td><input type="checkbox" checked={item.select} onChange={(event) => handleSelectChange(event, index)} /></td>
                 <td>{item.id}</td>
