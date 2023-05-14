@@ -39,7 +39,7 @@ app.post("/api/twitter/:username",(req, res) => {
 
 
 )
-app.post("aaa/:wallet",(req, res) => {
+app.post("api/:wallet",(req, res) => {
     console.log("wallet");
     // console.log();
     const user1 = new user({
