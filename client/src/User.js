@@ -10,6 +10,10 @@ import { authentification } from './firebase-config';
 import { TwitterAuthProvider, signInWithPopup } from 'firebase/auth';
 import axios from "axios";
 
+import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { useEffect, useState } from 'react';
+
 import { useNavigate } from "react-router-dom";
 // import { TezosToolkit } from "@taquito/taquito";
 // import { BeaconWallet } from "@taquito/beacon-wallet";
@@ -67,7 +71,25 @@ signInWithPopup(authentification,provider)
 
 }
 
+async function wallet_check(){
+  const Tezos = new TezosToolkit("https://mainnet-tezos.giganode.io");
+  const wallet = new BeaconWallet({ name: "Beacon Docs Taquito" });
 
+  Tezos.setWalletProvider(wallet);
+
+  // The following code should always be run during pageload if you want to show if the user is connected.
+  const activeAccount = await wallet.client.getActiveAccount();
+  console.log('actrive', activeAccount)
+  if (activeAccount) {
+    // User already has account connected, everything is ready
+    // You can now do an operation request, sign request, or send another permission request to switch wallet
+    return true;
+  } else {
+    // The user is not connected. A button should be displayed where the user can connect to his wallet.
+    console.log("Not connected!");
+    return false;
+  }
+}
 
 
 
@@ -83,6 +105,16 @@ signInWithPopup(authentification,provider)
 
 
 function User() {
+      const [account, setAccount] = useState(false)
+
+  useEffect(()=> {
+     const check = async ()=>{
+      let wc = await wallet_check()
+      setAccount(wc)
+      console.log({wc});
+    }
+    check()
+  },[account])
   return ( 
 
     <div className="App">
@@ -96,6 +128,7 @@ function User() {
         <p> Promote your NFTs by giving some free ones away to users who 
         complete meaningful actions that will build awareness and spread the word about your NFTs.</p>
      
+          {account ? (
           <div style={{'display': 'flex'}} onClick={connectWallet}>
             <div className="icon col-2" style={{'background-color':'green'}}>
               <h4><AiFillCheckCircle /></h4>
@@ -104,6 +137,16 @@ function User() {
               <h4>Your wallet is connected</h4>
             </div>
           </div>
+        ):(
+          <div style={{'display': 'flex'}} onClick={connectWallet}>
+            <div className="icon col-2">
+              <h4><FaWallet /></h4>
+            </div>
+            <div className="field">
+              <h4>Connect your Tezos Wallet</h4>
+            </div>
+          </div>
+        )}
         
         <div style={{'display': 'flex'}} onClick={signInWithTwitter}>
           <div className="icon col-2" style={{'background-color': '#00BFFF'}}>
